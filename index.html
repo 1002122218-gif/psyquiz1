@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>בוחן אינטראקטיבי בפסיכולוגיה - הכנה לבחינה</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Assistant', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 12px;
+      line-height: 1.5;
+    }
+
+    #app {
+      width: 100%;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+
+    /* Start Screen */
+    .hero {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .hero-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 24px;
+    }
+
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+      text-align: right;
+    }
+
+    .badge-item {
+      background: #f1f5f9;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+      background: var(--primary-hover);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    /* Header & Progress */
+    .quiz-header {
+      margin-bottom: 16px;
+    }
+
+    .progress-bar-bg {
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .meta-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .topic-tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    /* Question & Options */
+    .question-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.45;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .option-btn {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      text-align: right;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.4;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f0fdf400;
+    }
+
+    .option-letter {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46;
+    }
+
+    .option-btn.selected-correct .option-letter {
+      background: var(--success);
+      color: white;
+      border-color: var(--success);
+    }
+
+    .option-btn.selected-wrong {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b;
+    }
+
+    .option-btn.selected-wrong .option-letter {
+      background: var(--danger);
+      color: white;
+      border-color: var(--danger);
+    }
+
+    .option-btn.show-correct {
+      border-color: var(--success) !important;
+      background: #ecfdf5 !important;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    /* Actions Bar */
+    .actions-bar {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-hint {
+      background: #fffbe3;
+      border: 1px solid #fde68a;
+      color: #b45309;
+      font-size: 14px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: auto;
+    }
+
+    /* Hint Box */
+    .hint-box {
+      background: #fffdf0;
+      border-right: 4px solid var(--warning);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #78350f;
+      margin-bottom: 16px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* Feedback Box */
+    .feedback-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .feedback-box.correct {
+      background: var(--success-light);
+      border-right: 4px solid var(--success);
+    }
+
+    .feedback-box.wrong {
+      background: var(--danger-light);
+      border-right: 4px solid var(--danger);
+    }
+
+    .feedback-header {
+      font-weight: 800;
+      font-size: 16px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feedback-box.correct .feedback-header { color: #065f46; }
+    .feedback-box.wrong .feedback-header { color: #991b1b; }
+
+    .feedback-text {
+      font-size: 14px;
+      color: #334155;
+      margin-bottom: 10px;
+    }
+
+    .memory-tip {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    /* Results Screen */
+    .results-score-circle {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px auto;
+      border: 4px solid var(--primary);
+    }
+
+    .score-num {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .category-breakdown {
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .recommendation-box {
+      background: #f0f9ff;
+      border-right: 4px solid #0284c7;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #0369a1;
+      margin-bottom: 20px;
+      text-align: right;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- START SCREEN -->
+  <div id="start-screen" class="card hero">
+    <div class="hero-icon">🧠</div>
+    <h1>בוחן אינטראקטיבי בפסיכולוגיה</h1>
+    <p>הכנה מקיפה למבחן: תרגול שאלות יישומיות, רמזים חכמים, טיפים לזיכרון ופידבק מיידי.</p>
+    
+    <div class="badge-grid">
+      <div class="badge-item"><span>📚</span> 16 שאלות מקיפות</div>
+      <div class="badge-item"><span>💡</span> רמזים בכל שאלה</div>
+      <div class="badge-item"><span>🧠</span> טיפים מנצחים לזיכרון</div>
+      <div class="badge-item"><span>📱</span> מותאם מופלא לטלפון</div>
+    </div>
+
+    <button class="btn btn-primary" onclick="quizApp.startQuiz()">התחל בבוחן עכשיו</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="quiz-header">
+      <div class="progress-bar-bg">
+        <div id="progress-bar" class="progress-bar-fill"></div>
+      </div>
+      <div class="meta-info">
+        <span id="question-count">שאלה 1 מתוך 16</span>
+        <span id="topic-tag" class="topic-tag">זיכרון</span>
+      </div>
+    </div>
+
+    <div id="question-title" class="question-title"></div>
+
+    <div id="options-container" class="options-container"></div>
+
+    <div id="hint-box" class="hint-box"></div>
+
+    <div class="actions-bar">
+      <button id="hint-btn" class="btn-hint" onclick="quizApp.toggleHint()">💡 קבל רמז</button>
+    </div>
+
+    <div id="feedback-box" class="feedback-box">
+      <div id="feedback-header" class="feedback-header"></div>
+      <div id="feedback-text" class="feedback-text"></div>
+      <div id="memory-tip" class="memory-tip"></div>
+      <button id="next-btn" class="btn btn-primary" style="margin-top: 14px;" onclick="quizApp.nextQuestion()">לשאלה הבאה ➔</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen" class="card hidden" style="text-align: center;">
+    <h2>סיכום והערכה אישית</h2>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">סיימת בהצלחה את הבוחן! הנה ניתוח הביצועים שלך:</p>
+
+    <div class="results-score-circle">
+      <span id="final-score" class="score-num">0</span>
+      <span class="score-label">מתוך 100</span>
+    </div>
+
+    <h3 id="score-status" style="margin-bottom: 12px; color: var(--primary);"></h3>
+
+    <div class="category-breakdown" id="category-breakdown"></div>
+
+    <div id="recommendation-box" class="recommendation-box"></div>
+
+    <button class="btn btn-primary" onclick="quizApp.restartQuiz()">נסה שוב / תרגל מחדש</button>
+  </div>
+</div>
+
+<script>
+const quizQuestions = [
+  {
+    id: 1,
+    topic: "קוגניציה וזיכרון",
+    question: "איילת השתתפה בניסוי מחקרי שבו סופר לה על ידי אחותה הגדולה על אירוע מילדותה שבו כביכול ננעלה במקלט השכונתי. למעשה, האירוע לא קרה מעולם. בשיחה הראשונה איילת לא זכרה זאת, אך לאחר שבוע תיארה בפירוט את תחושת המחנק, החושך והצבע של חולצתה באותו יום. איזו תופעה פסיכולוגית מדגימה סיטואציה זו?",
+    options: [
+      "זיכרון מדומה (False Memory) בעקבות שתילת מידע",
+      "אפקט הראשונות בזיכרון לטווח ארוך",
+      "שכחה עקב קשיים בשליפת מידע אפיזודי",
+      "העתקה מורחבת של זיכרון פרוצדורלי"
+    ],
+    correct: 0,
+    hint: "חשוב על מחקרה המפורסם של אליזבת לופטוס ('אבודים בקניון') בו בני אדם השתילו לעצמם פרטים שלמים על אירוע שלא התרחש מעולם.",
+    explanation: "זהו זיכרון מדומה. מחקרי לופטוס הראו כי זיכרון איננו מקלט וידאו אלא תהליך שחזורי שפגיע להצעות מטעות ומידע שקרי המתווסף מאוחר יותר.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: זכרו - 'הזיכרון הוא פאזל שנבנה מחדש, לא סרט מוקלט'. לופטוס הוכיחה ששתילת מידע מייצרת אמונות וזיכרונות מדומים אמיתיים לגמרי!"
+  },
+  {
+    id: 2,
+    topic: "קוגניציה וזיכרון",
+    question: "רוני שוקד על למידת חוקי העזר העירוניים לתחרות שאלונים (עובדות וכללים), ובמקביל נזכר ברגע המרגש שבו זכה במקום הראשון בתחרות השחייה בשנה שעברה. אילו שני סוגי זיכרון דקלרטיבי באים לידי ביטוי בדוגמה זו?",
+    options: [
+      "זיכרון פרוצדורלי וזיכרון אפיזודי",
+      "זיכרון סמנטי וזיכרון אפיזודי",
+      "זיכרון חושי וזיכרון סמנטי",
+      "זיכרון לטווח קצר וזיכרון פרוצדורלי"
+    ],
+    correct: 1,
+    hint: "זיכרון אחד עוסק בעובדות וידע כללי (חוקים), ואילו השני עוסק באירוע אישי חווייתי המוגדר בזמן ומקום.",
+    explanation: "חוקים ועובדות נשמרים בזיכרון הסמנטי (Semantic), בעוד חוויות אישיות מעברו של האדם נשמרות בזיכרון האפיזודי (Episodic). שניהם סוגים של זיכרון דקלרטיבי (מילולי).",
+    memoryTip: "🧠 טיפ זהב לזיכרון: סמנטי = 'ספר לימוד/עובדות' (Semantic), אפיזודי = 'אפיזודה מהחיים שלי' (Episodic)."
+  },
+  {
+    id: 3,
+    topic: "קוגניציה וזיכרון",
+    question: "יובל הקשיב לרשימה של 12 מילים בשיעור. כשהתבקש לשחזר אותן מיד, הוא זכר מצוין את 3 המילים הראשונות ואת 3 המילים האחרונות, אך התקשה לזכור את המילים שבאמצע. כיצד נקראת תופעה זו מורכבת מאיזה שני אפקטים?",
+    options: [
+      "עקומת השכחה של אביינגהאוס; אפקט המקביליות",
+      "עקומת המיקום السדרתי; אפקט הראשונות ואפקט האחרונות",
+      "מודל הקידוד המבני; אפקט העומס הקוגניטיבי",
+      "עקומת הזיכרון החושי; אפקט ההטרמה והאחזור"
+    ],
+    correct: 1,
+    hint: "שימו לב: המילים הראשונות נכנסו לזיכרון לטווח ארוך (LTM) והאחרונות עדיין בזיכרון לטווח קצר (STM).",
+    explanation: "זוהי 'עקומת המיקום السדרתי' (Serial Position Effect). פריטים ראשונים נהנים משינון ונכנסים ל-LTM (אפקט הראשונות), ופריטים אחרונים עדיין נמצאים ב-STM (אפקט האחרונות).",
+    memoryTip: "🧠 טיפ זהב לזיכרון: ראשונות = LTM (היה זמן לשנן), אחרונות = STM (עדיין בראש!), באמצע = נשכחו בין לבין."
+  },
+  {
+    id: 4,
+    topic: "קוגניציה וזיכרון",
+    question: "דנאל משלם בחנות באמצעות קוד אופרטיבי שקיבל במיסרון חצי דקה קודם לכן (ושכח אותו ברגע שסיים), ובמקביל מקליד במהירות בעיוורון על המקלדת מבלי לחשוב על מיקום המקשים. אילו שני סוגי זיכרון פועלים כאן?",
+    options: [
+      "זיכרון לטווח קצר (STM) וזיכרון פרוצדורלי (תהליכי)",
+      "זיכרון סמנטי וזיכרון חושי (איקוני)",
+      "זיכרון אפיזודי וזיכרון לטווח קצר",
+      "זיכרון דקלרטיבי וזיכרון סמנטי"
+    ],
+    correct: 0,
+    hint: "הקוד השמור למספר שניות דורש קיבולת מוגבלת בזמן, ואילו רכיבת אופניים/הקלדה היא מיומנות אוטומטית.",
+    explanation: "זכירת הקוד הזמני מבוצעת על ידי זיכרון לטווח קצר (STM - מוגבל בזמן ובקיבולת), ואילו מיומנויות תנועתיות ואוטומטיות (כמו הקלדה) הן חלק מהזיכרון הפרוצדורלי.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: פרוצדורלי = 'פרוצדורה/מיומנות' (איך עושים משהו בגוף), STM = 'פתק דביק שנמחק מהר'."
+  },
+  {
+    id: 5,
+    topic: "לחץ והתמודדות",
+    question: "עדי התבקשה להעביר הרצאה פתאומית מול מנהלי החברה. בהערכה הראשונית היא הגדירה את המצב כ'איום נוראי על מעמדה', ובשניונית הגיעה למסקנה שאין לה מספיק ידע או כלי הרגעה להתמודד עמו. לפי מודל האינטראקציה של לזרוס, מה תהיה התוצאה?",
+    options: [
+      "תגובת איוורור רגשי חיובית (קתרזיס)",
+      "חוויית לחץ בעוצמה גבוהה",
+      "הפעלה מיידית של מנגנון ההתנגדות הפיזיולוגי",
+      "הערכה מחודשת שמבטלת לחלוטין את התגובה"
+    ],
+    correct: 1,
+    hint: "מודל לזרוס מתמקד בפרשנות הקוגניטיבית: תפיסת איום גבוהה + תפיסת משאבים נמוכה = ?",
+    explanation: "לפי מודל לזרוס, לחץ הוא תוצאה של הערכת הגירוי כאיום (הערכה ראשונית) לצד תפיסה שהמשאבים העומדים לרשות הפרט אינם מספיקים לתגובה (הערכה שניונית).",
+    memoryTip: "🧠 טיפ זהב לזיכרון: לזרוס = 'אינטראקציה וקוגניציה' (1. האם המצב מאיים? 2. האם יש לי איך להתמודד?). אם 1=כן ו-2=לא -> מופיע לחץ!"
+  },
+  {
+    id: 6,
+    topic: "לחץ והתמודדות",
+    question: "אילן עובד כבר 5 חודשים רצוף בפרויקט לחוץ. בשבוע הראשון סבל מדפיקות לב ודריכות (אזעקה), לאחר מכן תפקד ברציפות ביעילות גבוהה אך תוך מאמץ נדרש (התנגדות), ולאחרונה חלה בדלקת ריאות חריפה מלווה באפיסת כוחות. איזה שלב ב'תסמונת ההסתגלות الכללית' (GAS) מתאר את סוף האירוע?",
+    options: [
+      "שלב האזעקה (Alarm)",
+      "שלב התשישות (Exhaustion)",
+      "שלב ההתנגדות (Resistance)",
+      "שלב ההערכה השניונית"
+    ],
+    correct: 1,
+    hint: "המודל הפיזיולוגי של הנס סלייה כולל 3 שלבים בסדר קבוע. מה קורה כשהמשאבים הפיזיים של הגוף אוזלים לחלוטין?",
+    explanation: "זהו שלב התשישות (Exhaustion) במודל של הנס סלייה. לאחר שהגוף נלחם והתנגד לאורך זמן, אנרגיית ההסתגלות אוזלת, המערכת החיסונית קורסת ומופיעות מחלות.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: שלבי סלייה (GAS) לפי הסדר: 1. אזעקה 🔔 (Fight/Flight), 2. התנגדות 🛡️ (תפקוד תחת עומס), 3. תשישות 🪫 (קריסת המערכות)."
+  },
+  {
+    id: 7,
+    topic: "לחץ והתמודדות",
+    question: "תמר חשה חרדה קשה לקראת מבחן הסיווג. כדי להתמודד עם הלחץ, היא החלה לבצע תרגילי נשימות סרעפתיות, מדיטציה והרפיית שרירים עד שנרגעה. באיזו דרך התמודדות נקטה תמר?",
+    options: [
+      "התמודדות ממוקדת בבעיה",
+      "התמודדות ממוקדת ברגש",
+      "הערכה שניונית אקטיבית",
+      "שיטת החיסון הנפשי של פלוטצ'יק"
+    ],
+    correct: 1,
+    hint: "האם תמר שינתה את המבחן עצמו ואת תנאיו (בעיה) או פעלה להפחתת הסערה הרגשית והתגובה הפיזיולוגית שלה (רגש)?",
+    explanation: "תמר נקטה בהתמודדות ממוקדת ברגש (Emotion-focused coping), שמטרתה להרגיע את התגובות הרגשיות והפיזיולוגיות הנגרמות מהלחץ, מבלי לשנות את הגירוי הלוחץ עצמו.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: ממוקד בעיה = 'לשנות את המציאות/ללמוד למבחן', ממוקד רגש = 'להרגיע את הגוף והלב/להירגע'."
+  },
+  {
+    id: 8,
+    topic: "לחץ והתמודדות",
+    question: "במחקר של גלס וזינגר (1972), נחשפו שתי קבוצות לרעש חזק ובלתי צפוי בזמן פתרון משימות. לקבוצה א' נאמר שיש להם כפתור המאפשר להפסיק את הרעש (אם כי התבקשו להימנע מלהשתמש בו), ולזאת ב' לא היה כפתור. מה היו הממצאים המרכזיים?",
+    options: [
+      "קבוצה א' סבלה מלחץ גבוה יותר בגלל הדילמה האם ללחוץ",
+      "קבוצה א' תפקדה טוב יותר וחוותה פחות לחץ, רק בשל תחושת השליטה הנתפסת",
+      "לא נרשם שום הבדל כיוון שאף נבדק לא לחץ על הכפתור בפועל",
+      "קבוצה ב' הראתה הסתגלות פיזיולוגית מהירה יותר"
+    ],
+    correct: 1,
+    hint: "הניסוי בדק האם *תחושת שליטה נתפסת* (גם אם לא מומשה) משפיעה על חווית הלחץ והתפקוד.",
+    explanation: "הממצא המרכזי היה ועודנו: עצם *תחושת השליטה* הנתפסת (נוכחות הכפתור) הפחיתה משמעותית את רמת הלחץ ושיפרה את הביצועים, גם מבלי שנבדקים לחצו עליו בפועל!",
+    memoryTip: "🧠 טיפ זהב לזיכרון: 'הכפתור של גלס וזינגר' = תחושת שליטה נתפסת מפחיתה לחץ, גם אם לא משתמשים בה בפועל!"
+  },
+  {
+    id: 9,
+    topic: "לחץ והתמודדות",
+    question: "פסיכולוג מאמן ספורטאים לקראת אולימפיאדה בשיטת 'חיסון נגד לחץ' (SIT) של מייכנבאום. מהו הסדר הנכון של שלושת השלבים בשיטה קוגניטיבית-התנהגותית זו?",
+    options: [
+      "שלב ההתנגדות -> שלב ההרפיה -> שלב היישום",
+      "שלב הנהורות (המשגה/חינוך) -> שלב רכישת מיומנויות -> שלב היישום והתרגול",
+      "שלב ההערכה הראשונית -> שלב ההערכה השניונית -> שלב ההתמודדות",
+      "שלב החשיפה הפיזית -> שלב השינוי הרגשי -> שלב הערכת התוצאות"
+    ],
+    correct: 1,
+    hint: "כמו חיסון רפואי: קודם מבינים את הבעיה (חינוך), אחר כך מקבלים את הנוגדנים/מיומנויות, ולבסוף נחשפים בשטח.",
+    explanation: "שלבי מייכנבאום הם: 1. המשגה/הנהורות (זיהוי מחשבות מכשילות), 2. רכישת מיומנויות (דיבור עצמי חיובי, הרפיה), 3. יישום ותרגול במצבי אמת.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: חיסון מייכנבאום = 1. להבין (המשגה) -> 2. ללמוד נשק (מיומנויות) -> 3. לצאת לקרב (יישום)."
+  },
+  {
+    id: 10,
+    topic: "רגשות",
+    question: "רוני הרגיש שילוב של הפתעה מהירה מלווה בציפייה ודריכות. לפי מודל רגשות היסוד של פלוצ'יק (Plutchik), כיצד נוצרים רגשות מורכבים ומגוונים אלו בחיי היומיום?",
+    options: [
+      "על ידי גירוי פיזיולוגי בלתי מותנה בלבד",
+      "שילוב ומיזוג של רגשות יסוד בעוצמות שונות וקוטביות קיימת",
+      "הפעלה בלעדית של מיקרו-הבעות פנים לא מודעות",
+      "פרשנות קוגניטיבית המשנה את המבנה הגנטי של הרגש"
+    ],
+    correct: 1,
+    hint: "פלוצ'יק דימה את הרגשות לגלגל הצבעים: ישנם רגשות יסוד מהם מורכבים כל שאר הרגשות.",
+    explanation: "מודל פלוצ'יק מציע 8 רגשות יסוד הרכובים בזוגות ניגודיים (קוטביות), בעוצמות שונות. מיזוג ושילוב של רגשות יסוד אלו יוצר את המגוון העשיר של הרגשות האנושיים.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: פלוצ'יק = 'גלגל הצבעים של הרגשות' (8 רגשות יסוד, עוצמות שונות, קוטביות ושילובים)."
+  },
+  {
+    id: 11,
+    topic: "רגשות",
+    question: "חוקר הציג לתיירים באיים מבודדים בגינאה החדשה תמונות של הבעות פנים והם זיהו בדיוק רב שמחה, כעס, עצב וגועל, למרות שלא נחשפו מעולם למדיה מערבית. מה הייתה המסקנה המרכזית מניסוי מפורסם זה של פול אקמן (Ekman)?",
+    options: [
+      "הבעות פנים נלמדות אך ורק בתהליך החיור החברתי",
+      "הבעות פנים של רגשות יסוד הן אוניברסליות, מולדות וזהות בכל התרבויות",
+      "שבטים מבודדים מביעים רגשות רק באמצעות שפת גוף ולא באמצעות הפנים",
+      "מיקרו-הבעות פנים מופיעות רק אצל אנשים שעברו הכשרה מיוחדת"
+    ],
+    correct: 1,
+    hint: "אקמן הוכיח שגם ללא למידה ותרבות משותפת, בני אדם בכל העולם מבינים ומביעים את אותם רגשות יסוד בפנים.",
+    explanation: "מחקריו של פול אקמן הוכיחו כי הבעות הפנים של 6-7 רגשות היסוד הן אוניברסליות ומולדות. בנוסף גילה את ה'מיקרו-הבעות' - תנועות פנים מהירות ובלתי רצוניות החושפות רגש אמת.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: פול אקמן = 'פנים אוניברסליות' (כל אדם בעולם מביע ומזהה רגשות יסוד בפנים באופן מולד)."
+  },
+  {
+    id: 12,
+    topic: "מבוא לפסיכולוגיה ומחקר מדעי",
+    question: "צוות חוקרים צפה בילדים, תיעד את מספר הפעמים שחייכו, הסביר את הגורמים החברתיים לכך, ושיער כי חיזוקים חיוביים יגבירו תופעה זו בעתיד ואף סייע לצוות החינוכי לשפר את האווירה. אילו ארבע מטרות של הפסיכולוגיה באות לידי ביטוי כאן?",
+    options: [
+      "תיאור, הסבר, ניבוי, והשפעה/בקרה",
+      "הסתגלות, למידה, ניתוח, והערכה",
+      "תצפית, ניסוי, מדידה, והכללה",
+      "קידוד, אחסון, שליפה, ועיבוד"
+    ],
+    correct: 0,
+    hint: "ארבעת השלבים הולכים מהתיעוד הקיים, דרך הסיבה, המשך בצפייה לעתיד ועד לשינוי בפועל.",
+    explanation: "ארבע מטרות הפסיכולוגיה הן: 1. תיאור (מה קורה), 2. הסבר (למה זה קורה), 3. ניבוי (מתי זה יקרה שוב), 4. השפעה/בקרה (איך אפשר לשנות/לשפר).",
+    memoryTip: "🧠 טיפ זהב לזיכרון: מטרות הפסיכולוגיה: תיאור 📝 -> הסבר 💡 -> ניבוי 🔮 -> השפעה/שינוי 🛠️."
+  },
+  {
+    id: 13,
+    topic: "מבוא לפסיכולוגיה ומחקר מדעי",
+    question: "חוקרת פרסמה בכתב עת מדעי את פרוטוקול המחקר בפירוט מלא, כולל כל הגירויים, הזמנים והשאלונים, כדי שמעבדות אחרות בעולם יוכלו לחזור על הניסוי בדיוק באותו אופן. איזה מאפיין מרכזי של החקר המדעי מודגם בשיחזור זה?",
+    options: [
+      "סובייקטיביות מחקרית",
+      "הדירות (Publicity / Replicability - פומביות וניתנות לשחזור)",
+      "הסקה אינדוקטיבית בלבד",
+      "עיקרון הרצף הפיזיולוגי"
+    ],
+    correct: 1,
+    hint: "מדע חייב להיות גלוי כדי שחוקרים נוספים יוכלו לבצע בדיוק את אותה פרוצדורה ולבחון אם יתקבלו אותן תוצאות.",
+    explanation: "מאפיין זה הוא פומביות והדירות (שחזור) – הנתונים והשיטות גלויים לכל, וניתן לחזור על המחקר במעבדות שונות כדי לאמת את הממצאים.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: הדירות / פומביות = 'מתכון פתוח' (כל חוקר בעולם יכול לבשל את אותו ניסוי ולבדוק את התוצאה)."
+  },
+  {
+    id: 14,
+    topic: "מבוא לפסיכולוגיה ומחקר מדעי",
+    question: "נועה הביטה בחברתה שחייכה חיוך רחב וניגשה לחבק אותה, ובמקביל חשה נועה שמחה פנימית והתרגשות. אילו שני סוגי התנהגות באים לידי ביטוי בדוגמה זו לפי הגדרת הפסיכולוגיה?",
+    options: [
+      "התנהגות גלויה (גלויה לעין) והתנהגות סמויה (סמויה לעין / תהליכים פנימיים)",
+      "התנהגות מולדת והתנהגות פרוצדורלית",
+      "התנהגות פיזיולוגית והתנהגות קוגניטיבית בלעדית",
+      "התנהגות קבוצתית והתנהגות פתולוגית"
+    ],
+    correct: 0,
+    hint: "חיוך וחיבוק ניתן לראות בגלוי; תחושת שמחה והרהורים הם תהליכים נפשיים פנימיים.",
+    explanation: "הפסיכולוגיה חוקרת התנהגות גלויה (ניתנת לצפייה ומדידה ישירה - חיוך, ריצה) והתנהגות סמויה (תהליכים נפשיים פנימיים - מחשבות, רגשות, תחושות).",
+    memoryTip: "🧠 טיפ זהב לזיכרון: גלויה = 'מה שרואה המצלמה' 🎥, סמויה = 'מה שקורה בתוך הלב והמוח' 🧠."
+  },
+  {
+    id: 15,
+    topic: "לחץ והתמודדות",
+    question: "חוקרים השתמשו ב'סולם ההסתגלות מחדש' של הולמס וריי (SRRS) כדי להעריך רמת לחץ אצל עובדים. מהו העיקרון המנחה של סולם זה כמקור ללחץ לפי מודל הגירויים?",
+    options: [
+      "לחץ נגרם אך ורק מאירועים שליליים וטראומטיים",
+      "לחץ נמדד לפי כמות השינוי וההסתגלות מחדש הנדרשת מהאדם באירועי חיים (חיוביים ושליליים כאחד)",
+      "לחץ תלוי אך ורק בהערכה הקוגניטיבית הסובייקטיבית של הפרט",
+      "שינויים ביולוגיים במערכת החיסונית הם המדד היחיד בסולם"
+    ],
+    correct: 1,
+    hint: "הולמס וריי מדדו 'יחידות שינוי חיים' (LCU) - גם חתונה וגם פיטורין דורשים הסתגלות מחדש!",
+    explanation: "לפי הולמס וריי (מודל הגירויים), אירועי חיים המצריכים הסתגלות מחדש (בין אם חיוביים כמו חתונה/קידום ובין אם שליליים כמו גירושין) יוצרים עומס ולחץ מצטבר על האדם.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: סולם הולמס וריי = 'כל שינוי בחיים עולה נקודות הסתגלות' (גם חתונה וגם מעבר דירה!)."
+  },
+  {
+    id: 16,
+    topic: "מבוא לפסיכולוגיה ומחקר מדעי",
+    question: "חוקרים שרצו לבדוק את השפעת העייפות על יכולת הקשב והזיכרון, השתמשו במשימות מחשב המדדות זמני תגובה ודיוק בדימוי מציאותי, ובמקביל ביצעו סריקות מוחיות (fMRI). אילו שיטות מחקר בקוגניציה באות לידי ביטוי כאן?",
+    options: [
+      "ניתוח חלומות ופסיכואנליזה קלינית",
+      "מטלות ניסוייות התנהגותיות ומדדים פיזיולוגיים/דימות מוחי",
+      "תצפית טבעונית בלתי מעורבת ושאלון דיווח עצמי בלבד",
+      "סולם ההסתגלות מחדש ומבחני השלכה"
+    ],
+    correct: 1,
+    hint: "חקר הקוגניציה המודרני משלב ניסויים התנהגותיים מדידים (זמני תגובה) יחד עם טכנולוגיות מתקדמות לחקר המוח.",
+    explanation: "חקר הקוגניציה מתבצע באמצעות ניסויים מעבדתיים/התנהגותיים (מדידת דיוק וזמני תגובה במשימות) לצד מדדים פיזיולוגיים וטכנולוגיות דימות מוחי (fMRI, EEG) לבחינת פעילות המוח בזמן אמת.",
+    memoryTip: "🧠 טיפ זהב לזיכרון: חקר קוגניציה = שילוב של 'ביצועים במשימה' 💻 + 'הצצה לתוך המוח' 🧠."
+  }
+];
+
+class PsychologyQuizApp {
+  constructor() {
+    this.currentQuestionIndex = 0;
+    this.score = 0;
+    this.userAnswers = [];
+    this.categoryScores = {
+      "קוגניציה וזיכרון": { correct: 0, total: 0 },
+      "לחץ והתמודדות": { correct: 0, total: 0 },
+      "רגשות": { correct: 0, total: 0 },
+      "מבוא לפסיכולוגיה ומחקר מדעי": { correct: 0, total: 0 }
+    };
+
+    // DOM Elements
+    this.startScreen = document.getElementById('start-screen');
+    this.quizScreen = document.getElementById('quiz-screen');
+    this.resultsScreen = document.getElementById('results-screen');
+    
+    this.progressBar = document.getElementById('progress-bar');
+    this.questionCount = document.getElementById('question-count');
+    this.topicTag = document.getElementById('topic-tag');
+    this.questionTitle = document.getElementById('question-title');
+    this.optionsContainer = document.getElementById('options-container');
+    
+    this.hintBtn = document.getElementById('hint-btn');
+    this.hintBox = document.getElementById('hint-box');
+    this.feedbackBox = document.getElementById('feedback-box');
+    this.feedbackHeader = document.getElementById('feedback-header');
+    this.feedbackText = document.getElementById('feedback-text');
+    this.memoryTip = document.getElementById('memory-tip');
+  }
+
+  startQuiz() {
+    this.currentQuestionIndex = 0;
+    this.score = 0;
+    this.userAnswers = [];
+    
+    // Reset category scores
+    for (let cat in this.categoryScores) {
+      this.categoryScores[cat] = { correct: 0, total: 0 };
+    }
+
+    quizQuestions.forEach(q => {
+      if (this.categoryScores[q.topic]) {
+        this.categoryScores[q.topic].total++;
+      }
+    });
+
+    this.startScreen.classList.add('hidden');
+    this.resultsScreen.classList.add('hidden');
+    this.quizScreen.classList.remove('hidden');
+
+    this.loadQuestion();
+  }
+
+  loadQuestion() {
+    const q = quizQuestions[this.currentQuestionIndex];
+    
+    // Update Header
+    const progress = ((this.currentQuestionIndex) / quizQuestions.length) * 100;
+    this.progressBar.style.width = `${progress}%`;
+    this.questionCount.textContent = `שאלה ${this.currentQuestionIndex + 1} מתוך ${quizQuestions.length}`;
+    this.topicTag.textContent = q.topic;
+
+    // Reset Elements
+    this.questionTitle.textContent = q.question;
+    this.optionsContainer.innerHTML = '';
+    this.hintBox.style.display = 'none';
+    this.hintBox.textContent = '';
+    this.hintBtn.style.display = 'inline-flex';
+    this.feedbackBox.style.display = 'none';
+
+    // Render Options
+    const letters = ['א', 'ב', 'ג', 'ד'];
+    q.options.forEach((opt, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = `<span class="option-letter">${letters[index]}</span> <span>${opt}</span>`;
+      btn.onclick = () => this.selectOption(index);
+      this.optionsContainer.appendChild(btn);
+    });
+  }
+
+  toggleHint() {
+    const q = quizQuestions[this.currentQuestionIndex];
+    if (this.hintBox.style.display === 'block') {
+      this.hintBox.style.display = 'none';
+    } else {
+      this.hintBox.textContent = `💡 רמז: ${q.hint}`;
+      this.hintBox.style.display = 'block';
+    }
+  }
+
+  selectOption(selectedIndex) {
+    const q = quizQuestions[this.currentQuestionIndex];
+    const optionButtons = this.optionsContainer.querySelectorAll('.option-btn');
+
+    // Disable all options
+    optionButtons.forEach(btn => btn.disabled = true);
+    this.hintBtn.style.display = 'none';
+
+    const isCorrect = selectedIndex === q.correct;
+
+    if (isCorrect) {
+      this.score++;
+      this.categoryScores[q.topic].correct++;
+      optionButtons[selectedIndex].classList.add('selected-correct');
+      
+      this.feedbackBox.className = 'feedback-box correct';
+      this.feedbackHeader.innerHTML = '🎉 תשובה נכונה! כל הכבוד!';
+    } else {
+      optionButtons[selectedIndex].classList.add('selected-wrong');
+      optionButtons[q.correct].classList.add('show-correct');
+      
+      this.feedbackBox.className = 'feedback-box wrong';
+      this.feedbackHeader.innerHTML = '❌ תשובה לא מדויקת';
+    }
+
+    this.feedbackText.textContent = q.explanation;
+    this.memoryTip.textContent = q.memoryTip;
+    this.feedbackBox.style.display = 'block';
+
+    this.userAnswers.push({
+      questionId: q.id,
+      selected: selectedIndex,
+      isCorrect: isCorrect
+    });
+  }
+
+  nextQuestion() {
+    this.currentQuestionIndex++;
+    if (this.currentQuestionIndex < quizQuestions.length) {
+      this.loadQuestion();
+    } else {
+      this.showResults();
+    }
+  }
+
+  showResults() {
+    this.quizScreen.classList.add('hidden');
+    this.resultsScreen.classList.remove('hidden');
+
+    const totalQuestions = quizQuestions.length;
+    const finalScore = Math.round((this.score / totalQuestions) * 100);
+
+    document.getElementById('final-score').textContent = finalScore;
+
+    const statusEl = document.getElementById('score-status');
+    if (finalScore >= 90) {
+      statusEl.textContent = "אלופה/אלוף! שליטה מצוינת בחומר 🏆";
+      statusEl.style.color = "#10b981";
+    } else if (finalScore >= 75) {
+      statusEl.textContent = "עבודה טובה מאוד! הידע חזק ויציב 👍";
+      statusEl.style.color = "#4f46e5";
+    } else if (finalScore >= 60) {
+      statusEl.textContent = "בסיס טוב, מומלץ לחזור על הנושאים הפחות מובנים 📖";
+      statusEl.style.color = "#f59e0b";
+    } else {
+      statusEl.textContent = "כדאי לעבור שוב על חומר הלימוד והטיפים לפני המבחן 💪";
+      statusEl.style.color = "#ef4444";
+    }
+
+    // Breakdown
+    const breakdownEl = document.getElementById('category-breakdown');
+    breakdownEl.innerHTML = '';
+
+    for (let cat in this.categoryScores) {
+      const data = this.categoryScores[cat];
+      if (data.total > 0) {
+        const pct = Math.round((data.correct / data.total) * 100);
+        const item = document.createElement('div');
+        item.className = 'cat-item';
+        item.innerHTML = `
+          <span>${cat}</span>
+          <span style="color: ${pct >= 70 ? '#10b981' : '#ef4444'};">${data.correct}/${data.total} (${pct}%)</span>
+        `;
+        breakdownEl.appendChild(item);
+      }
+    }
+
+    // Recommendation
+    const recEl = document.getElementById('recommendation-box');
+    let weakestCat = "";
+    let minPct = 101;
+
+    for (let cat in this.categoryScores) {
+      const data = this.categoryScores[cat];
+      if (data.total > 0) {
+        const pct = (data.correct / data.total) * 100;
+        if (pct < minPct) {
+          minPct = pct;
+          weakestCat = cat;
+        }
+      }
+    }
+
+    if (finalScore === 100) {
+      recEl.innerHTML = "📌 <strong>המלצת המשך למידה:</strong> את/ה מוכן/ה במאת האחוזים! מומלץ לעבור בקצרה על השאלות הפתוחות במבנה המבחן ולתרגל ניסוח תשובות מלאות.";
+    } else {
+      recEl.innerHTML = `📌 <strong>המלצת המשך למידה:</strong> מומלץ להתמקד בעיקר בנושא <strong>"${weakestCat}"</strong>, שם נרשמו יותר טעויות. חזור/י על מודלי הליבה ועל טיפי הזיכרון שבשאלות אלו.`;
+    }
+  }
+
+  restartQuiz() {
+    this.startQuiz();
+  }
+}
+
+// Initialize App
+const quizApp = new PsychologyQuizApp();
+</script>
+</body>
+</html>
